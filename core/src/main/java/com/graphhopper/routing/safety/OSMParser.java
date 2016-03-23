@@ -1,3 +1,5 @@
+package com.graphhopper.routing.safety;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +15,7 @@ public class OSMParser {
 	public static void parseFile(double minLong, double minLat, double maxLong, double maxLat, 
 		HashMap<Long, NodeInformation> nodeMap, HashMap<Long, Way> wayMap) {
 		try {
-    		URL yahoo = new URL("https://api.openstreetmap.org/api/0.6/map?bbox=" 
+    		URL yahoo = new URL("http://api.openstreetmap.org/api/0.6/map?bbox=" 
     			+ minLong + "," + minLat + "," + maxLong + "," + maxLat);
     		URLConnection yc = yahoo.openConnection();
     		BufferedReader in = new BufferedReader(

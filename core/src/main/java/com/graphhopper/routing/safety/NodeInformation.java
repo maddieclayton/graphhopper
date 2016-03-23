@@ -1,3 +1,5 @@
+package com.graphhopper.routing.safety;
+
 import java.util.ArrayList;
 import java.util.List;
 

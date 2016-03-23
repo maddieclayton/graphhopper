@@ -23,7 +23,6 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.PriorityQueue;
 import java.util.HashMap;
-import java.util.List;
 
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.TraversalMode;
@@ -35,10 +34,10 @@ import com.graphhopper.storage.Graph;
 import com.graphhopper.util.EdgeExplorer;
 import com.graphhopper.util.EdgeIterator;
 
-import com.graphhopper.safety.ColorMapParser;
-import com.graphhopper.safety.NodeInformation;
-import com.graphhopper.safety.OSMParser;
-import com.graphhopper.safety.Way;
+import com.graphhopper.routing.safety.ColorMapParser;
+import com.graphhopper.routing.safety.NodeInformation;
+import com.graphhopper.routing.safety.OSMParser;
+import com.graphhopper.routing.safety.Way;
 
 /**
  * This class implements the A* algorithm according to
