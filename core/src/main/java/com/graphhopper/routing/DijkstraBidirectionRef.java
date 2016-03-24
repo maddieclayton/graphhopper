@@ -218,7 +218,7 @@ public class DijkstraBidirectionRef extends AbstractBidirAlgo
             int safetyWeight = ColorMapParser.getSafetyWeight((long) iter.getAdjNode(),
                     (long) currEdge.adjNode, scores);
 
-            double tmpWeight = weighting.calcWeight(iter, reverse, currEdge.edge) + currEdge.weight;
+            double tmpWeight = (weighting.calcWeight(iter, reverse, currEdge.edge))*safetyWeight + currEdge.weight;
             if (Double.isInfinite(tmpWeight))
                 continue;
 
