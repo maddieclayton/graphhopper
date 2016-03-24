@@ -16,7 +16,7 @@ public class ColorMapParser {
     public static void parseFile(HashMap<Long, NodeInformation> nodeMap, 
         HashMap<Long, Way> wayMap, HashMap<Long, HashMap<Long, Integer>> scores) {
         try {
-            File file = new File("ColorInfo.xlsx");
+            File file = new File("colorinfo.xlsx");
             FileInputStream fs = new FileInputStream(file);
             XSSFWorkbook wb = new XSSFWorkbook(fs);
             XSSFSheet sheet = wb.getSheetAt(0);
