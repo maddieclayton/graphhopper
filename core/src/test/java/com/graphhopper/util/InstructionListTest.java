@@ -475,7 +475,7 @@ public class InstructionListTest
 
     public void verifyGPX( String gpx )
     {
-        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.DEFAULT_NS_PREFIX);
         Schema schema = null;
         try
         {
