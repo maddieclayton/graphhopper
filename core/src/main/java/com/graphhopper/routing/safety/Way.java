@@ -22,6 +22,10 @@ public class Way{
 		references.add(refId);
 	}
 	
+	public void addRefs(List<Long> refs) {
+		references = refs;
+	}
+	
 	public List<Long> getRefs() {
 		return references;
 	}

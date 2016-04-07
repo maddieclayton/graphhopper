@@ -105,7 +105,7 @@ public class AStar extends AbstractRoutingAlgorithm
         double minLat = 40.34993;
         double minLong = -74.66236;
         double maxLat = 40.35111;
-        OSMParser.parseFile(minLong, minLat, maxLong, maxLat, nodeMap, wayMap);
+        OSMParser.parseFile(nodeMap, wayMap);
         ColorMapParser.parseFile(nodeMap, wayMap, scores);
 
         double currWeightToGoal, estimationFullWeight;

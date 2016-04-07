@@ -1,26 +1,19 @@
 package com.graphhopper.routing.safety;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class OSMParser {
 
-	public static void parseFile(double minLong, double minLat, double maxLong, double maxLat, 
-		HashMap<Long, NodeInformation> nodeMap, HashMap<Long, Way> wayMap) {
+	public static void parseFile(HashMap<Long, NodeInformation> nodeMap, HashMap<Long, Way> wayMap) {
 		try {
-    		URL yahoo = new URL("http://api.openstreetmap.org/api/0.6/map?bbox=" 
-    			+ minLong + "," + minLat + "," + maxLong + "," + maxLat);
-    		URLConnection yc = yahoo.openConnection();
-    		BufferedReader in = new BufferedReader(
-                                new InputStreamReader(
-                                yc.getInputStream()));
+    		BufferedReader in = new BufferedReader(new FileReader("map"));
     		String inputLine;
 	      	
         	while ((inputLine = in.readLine()) != null) {
@@ -74,7 +67,7 @@ public class OSMParser {
 		    	r = Pattern.compile(pattern);
 	      		m = r.matcher(inputLine);
         		if (m.find()) {
-        			// make new Way with correct id
+        			// make new Way with correct id or pull other way
         			Way way = new Way(0);
         			pattern = "id=\"[0-9]*\"";
 		    		r = Pattern.compile(pattern);
@@ -104,6 +97,13 @@ public class OSMParser {
         					m = r.matcher(inputLine);
         					if (m.find()) {
         						String name = m.group(0).substring(3, m.group(0).length()-1);
+        						for (Long w : wayMap.keySet()) {
+        							if (name.equals(wayMap.get(w).getName()) &&
+        									!name.equals("Untitled Road")) {
+        								way.getRefs().addAll(wayMap.get(w).getRefs());
+        								wayID = w;
+        							}
+        						}
 	         					way.addName(name);
 	         				}
 	         			}
@@ -119,6 +119,7 @@ public class OSMParser {
         					if (nodeMap.containsKey(ref)) {
         						NodeInformation ni = nodeMap.get(ref);
         						ni.addWay(way);
+        						ni.setIsRoad(true);
         						nodeMap.put(ref, ni);
         					}
         					else {
@@ -133,9 +134,8 @@ public class OSMParser {
         				if (m.find()) {
         					way.setIsRoad(true);
         				}
-
-        				wayMap.put(wayID, way);
 	         		}
+        			wayMap.put(wayID, way);
 	      		}
 	        }
         	in.close();
@@ -149,13 +149,34 @@ public class OSMParser {
 	public static void main(String[] args) {
 		HashMap<Long, NodeInformation> nodeMap = new HashMap<Long, NodeInformation>();
 		HashMap<Long, Way> wayMap = new HashMap<Long, Way>();
-		double maxLong = -74.65986;
-		double minLat = 40.34993;
-		double minLong = -74.66236;
-		double maxLat = 40.35111;
-		parseFile(minLong, minLat, maxLong, maxLat, nodeMap, wayMap);
-		for (long l : wayMap.keySet()) {
+		parseFile(nodeMap, wayMap);
+		/*for (long l : wayMap.keySet()) {
 			System.out.println(wayMap.get(l).getName() + " " + wayMap.get(l).getIsRoad());
+		}*/
+		/*for (long l : nodeMap.keySet()) {
+			if (nodeMap.get(l).getIsRoad()) {
+				System.out.println("Name: " + nodeMap.get(l).getId());
+				for (Way l1 : nodeMap.get(l).getWays()) {
+					if (!l1.getName().equals("Untitled Road"))
+						System.out.println(l1.getName());
+				}
+				System.out.println("");
+			}
+		}*/
+		for (long key : wayMap.keySet()) {
+			if (wayMap.get(key).getName().equals("Walnut Lane")) {
+				for (long l : wayMap.get(key).getRefs()) {
+					for (long l1 : nodeMap.keySet()) {
+						if (l1 == l) {
+							System.out.println(l1);
+							for (Way way : nodeMap.get(l1).getWays()) {
+								System.out.println(way.getName());
+							}
+							System.out.println("");
+						}
+					}
+				}
+			}
 		}
 	}
 

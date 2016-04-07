@@ -13,13 +13,13 @@ public class Main {
 	public static void main(String[] args) {
 		GraphHopper hopper = new GraphHopper().forServer();
 		hopper.setCHEnable(false);
-		hopper.setOSMFile("map1.osm");
+		hopper.setOSMFile("maps.osm");
 		hopper.setGraphHopperLocation("graphhopper/temp");
 		hopper.setEncodingManager(new EncodingManager("bike"));
 
 		hopper.importOrLoad();
 
-		GHRequest req = new GHRequest(40.3495705, -74.662466, 40.3502235, -74.6601703).
+		GHRequest req = new GHRequest(40.3524738, -74.6511219, 40.3884395, -74.6551584).
 		    setVehicle("bike").setAlgorithm(AlgorithmOptions.ASTAR);
 		GHResponse res = hopper.route(req);
 		
