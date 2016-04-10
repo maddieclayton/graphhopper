@@ -14,8 +14,8 @@ import java.util.List;
 
 public class ColorMapParser {
 
-    public static void parseFile(HashMap<Long, NodeInformation> nodeMap, 
-        HashMap<Long, Way> wayMap, HashMap<Long, HashMap<Long, Integer>> scores) {
+    public static HashMap<Long, HashMap<Long, Integer>> parseFile(HashMap<Long, NodeInformation> nodeMap, HashMap<Long, Way> wayMap) {
+        HashMap<Long, HashMap<Long, Integer>> scores = new HashMap<Long, HashMap<Long, Integer>>();
         try {
             File file = new File("colorinfo.xls");
             FileInputStream fs = new FileInputStream(file);
@@ -229,6 +229,7 @@ public class ColorMapParser {
         } catch(Exception ioe) {
             ioe.printStackTrace();
         }
+        return scores;
     }
 
     public static int getSafetyWeight(long first, long second, HashMap<Long, HashMap<Long, Integer>> scores) {
@@ -245,11 +246,10 @@ public class ColorMapParser {
     }
 
     public static void main(String[] args) {
-        HashMap<Long, NodeInformation> nodeMap = new HashMap<Long, NodeInformation>();
+    	HashMap<Long, NodeInformation> nodeMap = new HashMap<Long, NodeInformation>();
         HashMap<Long, Way> wayMap = new HashMap<Long, Way>();
-        HashMap<Long, HashMap<Long, Integer>> scores = new HashMap<Long, HashMap<Long, Integer>>();
         OSMParser.parseFile(nodeMap, wayMap);
-        parseFile(nodeMap, wayMap, scores);
+    	HashMap<Long, HashMap<Long, Integer>> scores = parseFile(nodeMap, wayMap);
         for (Long key : scores.keySet()) {
         	for (Long key1 : scores.get(key).keySet()) {
         		System.out.println(key + " " + key1 + " " + 

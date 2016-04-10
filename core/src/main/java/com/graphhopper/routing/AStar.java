@@ -22,7 +22,6 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.PriorityQueue;
-import java.util.HashMap;
 
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.TraversalMode;
@@ -33,11 +32,6 @@ import com.graphhopper.storage.SPTEntry;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.util.EdgeExplorer;
 import com.graphhopper.util.EdgeIterator;
-
-import com.graphhopper.routing.safety.ColorMapParser;
-import com.graphhopper.routing.safety.NodeInformation;
-import com.graphhopper.routing.safety.OSMParser;
-import com.graphhopper.routing.safety.Way;
 
 /**
  * This class implements the A* algorithm according to
@@ -56,7 +50,7 @@ public class AStar extends AbstractRoutingAlgorithm
     private AStarEntry currEdge;
     private int to1 = -1;
 
-    public AStar( Graph g, FlagEncoder encoder, Weighting weighting, TraversalMode tMode )
+    public AStar( Graph g, FlagEncoder encoder, Weighting weighting, TraversalMode tMode)
     {
         super(g, encoder, weighting, tMode);
         initCollections(1000);
@@ -98,16 +92,6 @@ public class AStar extends AbstractRoutingAlgorithm
 
     private Path runAlgo()
     {
-        HashMap<Long, NodeInformation> nodeMap = new HashMap<Long, NodeInformation>();
-        HashMap<Long, Way> wayMap = new HashMap<Long, Way>();
-        HashMap<Long, HashMap<Long, Integer>> scores = new HashMap<Long, HashMap<Long, Integer>>();
-        double maxLong = -74.65986;
-        double minLat = 40.34993;
-        double minLong = -74.66236;
-        double maxLat = 40.35111;
-        OSMParser.parseFile(nodeMap, wayMap);
-        ColorMapParser.parseFile(nodeMap, wayMap, scores);
-
         double currWeightToGoal, estimationFullWeight;
         EdgeExplorer explorer = outEdgeExplorer;
         while (true)
@@ -128,9 +112,7 @@ public class AStar extends AbstractRoutingAlgorithm
 
                 int neighborNode = iter.getAdjNode();
                 int traversalId = traversalMode.createTraversalId(iter, false);
-                int safetyWeight = ColorMapParser.getSafetyWeight((long) currVertex,
-                    (long) neighborNode, scores);
-                double alreadyVisitedWeight = (weighting.calcWeight(iter, false, currEdge.edge))*safetyWeight
+                double alreadyVisitedWeight = (weighting.calcWeight(iter, false, currEdge.edge))
                         + currEdge.weightOfVisitedPath;
                 if (Double.isInfinite(alreadyVisitedWeight))
                     continue;

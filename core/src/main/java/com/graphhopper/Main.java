@@ -19,7 +19,7 @@ public class Main {
 
 		hopper.importOrLoad();
 
-		GHRequest req = new GHRequest(40.3524738, -74.6511219, 40.3884395, -74.6551584).
+		GHRequest req = new GHRequest(40.3453849, -74.663214, 40.3723288, 74.645158).
 		    setVehicle("bike").setAlgorithm(AlgorithmOptions.ASTAR);
 		GHResponse res = hopper.route(req);
 		
