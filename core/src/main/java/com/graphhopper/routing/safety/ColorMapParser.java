@@ -27,7 +27,7 @@ public class ColorMapParser {
             int rows; // No of rows
             rows = sheet.getPhysicalNumberOfRows();
 
-            for(int r = 461; r < 463; r++) {
+            for(int r = 0; r < rows; r++) {
                 row = sheet.getRow(r);
                 boolean found = false;
                 Way way = new Way(0);

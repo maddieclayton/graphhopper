@@ -18,6 +18,7 @@
 package com.graphhopper;
 
 import com.graphhopper.reader.DataReader;
+import com.graphhopper.reader.OSMReader;
 import com.graphhopper.routing.*;
 import com.graphhopper.routing.ch.PrepareContractionHierarchies;
 import com.graphhopper.routing.util.*;
@@ -218,7 +219,7 @@ public class GraphHopperTest
         final GraphHopper instance1 = new GraphHopper()
         {
             @Override
-            protected DataReader importData() throws IOException
+            protected OSMReader importData() throws IOException
             {
                 try
                 {

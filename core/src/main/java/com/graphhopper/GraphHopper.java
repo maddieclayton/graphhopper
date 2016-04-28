@@ -17,7 +17,6 @@
  */
 package com.graphhopper;
 
-import com.graphhopper.reader.DataReader;
 import com.graphhopper.reader.OSMReader;
 import com.graphhopper.reader.dem.CGIARProvider;
 import com.graphhopper.reader.dem.ElevationProvider;
@@ -96,6 +95,7 @@ public class GraphHopper implements GraphHopperAPI
     private double osmReaderWayPointMaxDistance = 1;
     private int workerThreads = -1;
     private boolean calcPoints = true;
+    private OSMReader osmReader;
     // utils
     private final TranslationMap trMap = new TranslationMap().doImport();
     private ElevationProvider eleProvider = ElevationProvider.NOOP;
@@ -736,11 +736,11 @@ public class GraphHopper implements GraphHopperAPI
 
             try
             {
-                DataReader reader = importData();
+                osmReader = importData();
                 DateFormat f = Helper.createFormatter();
                 ghStorage.getProperties().put("osmreader.import.date", f.format(new Date()));
-                if (reader.getDataDate() != null)
-                    ghStorage.getProperties().put("osmreader.data.date", f.format(reader.getDataDate()));
+                if (osmReader.getDataDate() != null)
+                    ghStorage.getProperties().put("osmreader.data.date", f.format(osmReader.getDataDate()));
             } catch (IOException ex)
             {
                 throw new RuntimeException("Cannot parse OSM file " + getOSMFile(), ex);
@@ -756,7 +756,7 @@ public class GraphHopper implements GraphHopperAPI
         return this;
     }
 
-    protected DataReader importData() throws IOException
+    protected OSMReader importData() throws IOException
     {
         ensureWriteAccess();
         if (ghStorage == null)
@@ -768,13 +768,13 @@ public class GraphHopper implements GraphHopperAPI
 
         encodingManager.setEnableInstructions(enableInstructions);
         encodingManager.setPreferredLanguage(preferredLanguage);
-        DataReader reader = createReader(ghStorage);
+        OSMReader reader = createReader(ghStorage);
         logger.info("using " + ghStorage.toString() + ", memory:" + Helper.getMemInfo());
         reader.readGraph();
         return reader;
     }
 
-    protected DataReader createReader( GraphHopperStorage ghStorage )
+    protected OSMReader createReader( GraphHopperStorage ghStorage )
     {
         return initOSMReader(new OSMReader(ghStorage));
     }
@@ -988,7 +988,7 @@ public class GraphHopper implements GraphHopperAPI
         } else if ("fastest".equalsIgnoreCase(weighting) || weighting.isEmpty())
         {
             if (encoder.supports(PriorityWeighting.class))
-                return new PriorityWeighting(encoder, weightingMap);
+                return new SafetyWeighting(encoder, locationIndex);
             else
                 return new FastestWeighting(encoder, weightingMap);
         } else if ("curvature".equalsIgnoreCase(weighting))
@@ -997,6 +997,11 @@ public class GraphHopper implements GraphHopperAPI
                 return new CurvatureWeighting(encoder, weightingMap, ghStorage);
             else
                 return new FastestWeighting(encoder, weightingMap);
+        } else if ("safety".equalsIgnoreCase(weighting)) {
+        	if (encoder.supports(SafetyWeighting.class)) 
+                return new SafetyWeighting(encoder, locationIndex);
+        	else
+                return new SafetyWeighting(encoder, locationIndex);
         }
 
         throw new UnsupportedOperationException("weighting " + weighting + " not supported");

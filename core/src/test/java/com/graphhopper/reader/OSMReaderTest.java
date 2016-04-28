@@ -123,20 +123,20 @@ public class OSMReaderTest
         }
 
         @Override
-        protected DataReader createReader( GraphHopperStorage tmpGraph )
+        protected OSMReader createReader( GraphHopperStorage tmpGraph )
         {
             return initOSMReader(new OSMReader(tmpGraph));
         }
 
         @Override
-        protected DataReader importData() throws IOException
+        protected OSMReader importData() throws IOException
         {
             getEncodingManager().setPreferredLanguage(getPreferredLanguage());
             GraphHopperStorage tmpGraph = newGraph(dir, getEncodingManager(), hasElevation(),
                     getEncodingManager().needsTurnCostsSupport());
             setGraphHopperStorage(tmpGraph);
 
-            DataReader osmReader = createReader(tmpGraph);
+            OSMReader osmReader = createReader(tmpGraph);
             try
             {
                 ((OSMReader) osmReader).setOSMFile(new File(getClass().getResource(getOSMFile()).toURI()));
@@ -229,7 +229,7 @@ public class OSMReaderTest
         GraphHopper hopper = new GraphHopperTest(file1)
         {
             @Override
-            protected DataReader createReader( GraphHopperStorage tmpGraph )
+            protected OSMReader createReader( GraphHopperStorage tmpGraph )
             {
                 return new OSMReader(tmpGraph)
                 {
@@ -675,7 +675,7 @@ public class OSMReaderTest
         GraphHopper hopper = new GraphHopperTest("custom-osm-ele.xml")
         {
             @Override
-            protected DataReader createReader( GraphHopperStorage tmpGraph )
+            protected OSMReader createReader( GraphHopperStorage tmpGraph )
             {
                 return initOSMReader(new OSMReader(tmpGraph)
                 {
